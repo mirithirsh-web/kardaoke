@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Kardaoke!",
-    "tagline": "¡Canta, ríe, gana!",
+    "tagline": "¡Canta, ríete, gana!",
     "soundOn": "Sonido activado",
     "soundOff": "Sonido desactivado"
   },
@@ -123,7 +123,7 @@
     "title": "Cómo jugar",
     "back": "Volver",
     "objective": "Objetivo",
-    "objectiveText": "¡Diviértete y acumula la mayor cantidad de puntos para ser coronado Rey/Reina de Kardaoke!",
+    "objectiveText": "¡Diviértete y acumula la mayor cantidad de puntos para ser coronad@ Rey/Reina de Kardaoke!",
     "howItWorks": "Cómo funciona",
     "step1": "El Maestro elige una canción y canta una parte (2-3 líneas).",
     "step2": "Cuando el Maestro da la señal, los coristas cantan la siguiente línea juntos.",
