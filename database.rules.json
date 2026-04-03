@@ -2,19 +2,21 @@
   "rules": {
     "rooms": {
       "$roomCode": {
-        ".read": true,
-        ".write": true,
+        ".read": "auth != null",
+        ".write": "auth != null",
         "privateCard": {
           "$uid": {
             ".read": "auth != null && auth.uid === $uid",
-            ".write": true
+            ".write": "auth != null"
           }
         },
         "cardDecks": {
           ".read": "auth != null",
-          ".write": true
+          ".write": "auth != null"
         }
       }
-    }
+    },
+    ".read": false,
+    ".write": false
   }
 }
