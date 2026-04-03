@@ -69,7 +69,7 @@ export default function SpectatorGameView() {
         <div className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-pink-400 bg-clip-text text-transparent">
           {maestroName}
         </div>
-        <div className="text-sm text-white/40 mt-2">{t('game.backupSingers')}</div>
+        <div className="text-sm text-white/40 mt-2">🎙️ {t('mp.youAreBackup')}</div>
       </div>
 
       {/* Phase indicator */}

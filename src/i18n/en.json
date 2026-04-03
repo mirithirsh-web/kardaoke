@@ -194,6 +194,7 @@
     "waiting": "waiting...",
     "disconnected": "left",
     "gotItRight": "got it right",
+    "youAreBackup": "You are a backup singer",
     "maestroChoosing": "The Maestro is choosing what to do...",
     "maestroDrawing": "The Maestro is drawing a card...",
     "maestroAdvanced": "The Maestro used Advanced Draw!",
