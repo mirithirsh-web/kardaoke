@@ -51,7 +51,8 @@ export default function Home() {
             <span className="text-xs opacity-60">▾</span>
           </button>
           {langOpen && (
-            <div className="absolute top-full mt-1 right-0 glass rounded-xl overflow-hidden min-w-[140px] shadow-xl border border-white/10 z-[60]">
+            <div className="absolute top-full mt-1 right-0 rounded-xl overflow-hidden min-w-[140px] shadow-2xl border border-white/15 z-[60]"
+              style={{ background: 'linear-gradient(135deg, #2d1b4e 0%, #1a1033 100%)' }}>
               {LANGUAGES.map((lang) => (
                 <button
                   key={lang.code}
