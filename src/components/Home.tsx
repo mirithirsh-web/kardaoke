@@ -40,14 +40,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen relative flex flex-col items-center justify-center px-6 pt-16 pb-6 text-white">
-      <div className="absolute top-4 right-4 z-10 flex gap-2">
-        <button
-          onClick={toggleMute}
-          className="btn-secondary text-sm px-3 py-2"
-          title={isMuted ? t('app.soundOff') : t('app.soundOn')}
-        >
-          {isMuted ? '🔇' : '🔊'}
-        </button>
+      <div dir="ltr" className="fixed top-4 right-4 z-50 flex gap-2">
         <div ref={langRef} className="relative">
           <button
             onClick={() => setLangOpen(!langOpen)}
@@ -58,7 +51,7 @@ export default function Home() {
             <span className="text-xs opacity-60">▾</span>
           </button>
           {langOpen && (
-            <div className="absolute top-full mt-1 right-0 glass rounded-xl overflow-hidden min-w-[140px] shadow-xl border border-white/10 z-50">
+            <div className="absolute top-full mt-1 right-0 glass rounded-xl overflow-hidden min-w-[140px] shadow-xl border border-white/10 z-[60]">
               {LANGUAGES.map((lang) => (
                 <button
                   key={lang.code}
@@ -74,10 +67,17 @@ export default function Home() {
             </div>
           )}
         </div>
+        <button
+          onClick={toggleMute}
+          className="btn-secondary text-sm px-3 py-2"
+          title={isMuted ? t('app.soundOff') : t('app.soundOn')}
+        >
+          {isMuted ? '🔇' : '🔊'}
+        </button>
       </div>
 
-      <div className="animate-float mb-6">
-        <img src={logoImg} alt="Kardaoke!" className="w-48 h-48 object-contain drop-shadow-2xl" />
+      <div className="animate-float mb-6 relative z-0">
+        <img src={logoImg} alt="Kardaoke!" className="w-48 h-48 object-contain drop-shadow-2xl rounded-3xl" style={{ mixBlendMode: 'screen' }} />
       </div>
 
       <h1 dir="ltr" className="text-5xl font-bold mb-2 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">

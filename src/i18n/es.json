@@ -18,6 +18,7 @@
   "setup": {
     "title": "Configuración",
     "addPlayer": "Agregar jugador",
+    "players": "Jugadores",
     "playerName": "Nombre del jugador",
     "rounds": "Número de rondas",
     "roundsHint2_3": "Recomendado: 8-10 rondas para 2-3 jugadores",

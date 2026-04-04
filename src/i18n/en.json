@@ -18,6 +18,7 @@
   "setup": {
     "title": "Game Setup",
     "addPlayer": "Add Player",
+    "players": "Players",
     "playerName": "Player name",
     "rounds": "Number of Rounds",
     "roundsHint2_3": "Recommended: 8-10 rounds for 2-3 players",

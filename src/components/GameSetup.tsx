@@ -75,7 +75,7 @@ export default function GameSetup() {
         {/* Player list */}
         <div className="glass rounded-2xl p-5">
           <h3 className="text-lg font-semibold mb-4">
-            {t('setup.addPlayer')} ({playerCount})
+            {t('setup.players')}
           </h3>
 
           <div className="space-y-3">

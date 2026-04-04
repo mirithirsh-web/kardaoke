@@ -18,6 +18,7 @@
   "setup": {
     "title": "Configuration de la partie",
     "addPlayer": "Ajouter un joueur",
+    "players": "Joueurs",
     "playerName": "Nom du joueur",
     "rounds": "Nombre de manches",
     "roundsHint2_3": "Recommandé : 8-10 manches pour 2-3 joueurs",
