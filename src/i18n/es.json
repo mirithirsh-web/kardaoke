@@ -159,7 +159,12 @@
     "otherRules": "Otras reglas",
     "otherRulesText1": "Cada canción solo se puede usar una vez por juego.",
     "otherRulesText2": "No debes mostrar tu carta de inspiración a otros jugadores hasta que el turno haya terminado.",
-    "otherRulesText3": "Si una carta no es relevante (ej. no hay suficientes jugadores), muéstrala, descártala y saca una nueva."
+    "clarificationsTitle": "Preguntas y aclaraciones",
+    "clarification1": "No puedes \"robar\" el turno, pero puedes jugar una versión competitiva donde solo la primera persona que cante la siguiente línea obtiene los puntos (recomendado solo para jugadores experimentados).",
+    "clarification2": "Si los coristas cantan la siguiente línea incorrectamente, no obtienen puntos.",
+    "clarification3": "Si varios coristas cantan simultáneamente pero solo algunos aciertan, solo quienes canten la letra correcta obtienen puntos. En una versión avanzada, quienes acierten reciben un punto extra por cada corista que se equivoque o no cante.",
+    "clarification4": "Diferentes jugadores pueden cantar letras distintas, pero si todos cantan las palabras correctas, todos obtienen puntos. Consulta la letra de la canción en caso de duda.",
+    "clarification5": "Puedes ajustar las reglas según la edad y el nivel de los participantes. Lo más importante — ¡diviértete! Si a todos les encanta una canción, ¡sigan cantando — no hace falta parar después de una sola línea!"
   },
   "modeSelect": {
     "title": "Como quieres jugar?",

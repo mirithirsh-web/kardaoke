@@ -159,7 +159,12 @@
     "otherRules": "Autres règles",
     "otherRulesText1": "Chaque chanson ne peut être utilisée qu'une seule fois par partie.",
     "otherRulesText2": "Ne montrez pas votre carte d'inspiration aux autres joueurs avant la fin du tour.",
-    "otherRulesText3": "Si une carte ne s'applique pas (p. ex. pas assez de joueurs), montrez-la, défaussez-la et piochez un remplacement."
+    "clarificationsTitle": "Questions et clarifications",
+    "clarification1": "Vous ne pouvez pas « voler » le tour, mais vous pouvez jouer une version compétitive où seule la première personne à chanter la ligne suivante obtient les points (recommandé pour les joueurs expérimentés uniquement).",
+    "clarification2": "Si les choristes chantent la ligne suivante incorrectement, ils n'obtiennent aucun point.",
+    "clarification3": "Si plusieurs choristes chantent simultanément mais que certains seulement ont les bonnes paroles, seuls ceux qui chantent correctement marquent des points. Dans une version avancée, les chanteurs corrects reçoivent un point bonus pour chaque choriste qui se trompe ou ne chante pas.",
+    "clarification4": "Différents joueurs peuvent chanter des paroles différentes, mais s'ils chantent tous les bons mots, ils marquent tous des points. Vérifiez les paroles en cas de doute.",
+    "clarification5": "Vous pouvez adapter les règles selon l'âge et le niveau des participants. Le plus important — amusez-vous ! Si tout le monde adore une chanson, continuez à chanter — pas besoin de s'arrêter après une seule ligne !"
   },
   "modeSelect": {
     "title": "Comment voulez-vous jouer ?",

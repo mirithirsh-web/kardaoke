@@ -159,7 +159,12 @@
     "otherRules": "Other Rules",
     "otherRulesText1": "Each song can only be used once per game.",
     "otherRulesText2": "You must not show your Inspiration Card to other players until the turn is completed.",
-    "otherRulesText3": "If a card isn't relevant (e.g. not enough players), show it, discard it, and draw a replacement."
+    "clarificationsTitle": "Questions & Clarifications",
+    "clarification1": "You cannot \"steal\" the turn, but you can play a competitive version where only the person who sings the next line first gets the points (recommended for experienced players only).",
+    "clarification2": "If the Backup Singers sing the next line incorrectly, they don't get any points.",
+    "clarification3": "If multiple Backup Singers sing simultaneously but only some are correct, only those with the right lyrics score. In an advanced version, correct singers get a bonus point for each incorrect or silent Backup Singer.",
+    "clarification4": "Different players may sing different lyrics, but if they all sing the correct words, they earn points. Check the song's lyrics if in doubt.",
+    "clarification5": "You can adjust the rules according to the age and level of the participants. Most importantly — have fun! If you all love a song, keep singing — no need to stop after one line!"
   },
   "modeSelect": {
     "title": "How do you want to play?",

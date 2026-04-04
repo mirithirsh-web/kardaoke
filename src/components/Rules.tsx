@@ -53,8 +53,13 @@ export default function Rules() {
     },
     {
       title: t('rules.otherRules'),
-      content: [t('rules.otherRulesText1'), t('rules.otherRulesText2'), t('rules.otherRulesText3')],
+      content: [t('rules.otherRulesText1'), t('rules.otherRulesText2')],
       icon: '📋',
+    },
+    {
+      title: t('rules.clarificationsTitle'),
+      content: [t('rules.clarification1'), t('rules.clarification2'), t('rules.clarification3'), t('rules.clarification4'), t('rules.clarification5')],
+      icon: '❓',
     },
   ];
 
