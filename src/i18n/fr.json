@@ -26,6 +26,8 @@
     "includeCards": "Inclure les cartes d'inspiration",
     "allowStealing": "Autoriser le vol de cartes",
     "allowStealingHint": "Le Maestro peut voler des cartes face visible aux autres joueurs au lieu de piocher",
+    "themedPacks": "Themed Packs",
+    "themedPacksHint": "Add extra themed cards to the yellow deck",
     "startGame": "Lancer la partie !",
     "minPlayers": "Ajoutez au moins 2 joueurs",
     "removePlayer": "Retirer"

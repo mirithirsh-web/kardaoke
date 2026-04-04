@@ -26,6 +26,8 @@
     "includeCards": "Include Inspiration Cards",
     "allowStealing": "Allow Card Stealing",
     "allowStealingHint": "Maestro can steal face-up cards from other players instead of drawing",
+    "themedPacks": "Themed Decks",
+    "themedPacksHint": "Add extra themed cards to the yellow deck",
     "startGame": "Start Game!",
     "minPlayers": "Add at least 2 players",
     "removePlayer": "Remove"

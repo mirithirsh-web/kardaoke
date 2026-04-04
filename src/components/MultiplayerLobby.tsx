@@ -3,15 +3,17 @@ import { useTranslation } from 'react-i18next';
 import { useGame } from '../context/GameContext';
 import { useRoom } from '../context/RoomContext';
 import { useMultiplayerGame } from '../context/MultiplayerGameContext';
+import { themedPacks } from '../data/themedPacks';
 import type { RoomSettings } from '../types';
 
 export default function MultiplayerLobby() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { dispatch } = useGame();
   const { roomCode, isCreator, players, status, settings, leaveRoom, updateSettings, startGame } = useRoom();
   const { initGame } = useMultiplayerGame();
   const [starting, setStarting] = useState(false);
   const [showStartConfirm, setShowStartConfirm] = useState(false);
+  const [showPacks, setShowPacks] = useState(false);
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
@@ -52,7 +54,15 @@ export default function MultiplayerLobby() {
     await updateSettings({ [key]: value });
   };
 
-  const s = settings || { rounds: 5, includeCards: true, allowStealing: false };
+  const s = settings || { rounds: 5, includeCards: true, allowStealing: false, selectedPacks: [] as string[] };
+  const currentPacks: string[] = s.selectedPacks || [];
+
+  const togglePack = async (packId: string) => {
+    const updated = currentPacks.includes(packId)
+      ? currentPacks.filter(id => id !== packId)
+      : [...currentPacks, packId];
+    await updateSettings({ selectedPacks: updated });
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center p-6 text-white">
@@ -137,6 +147,49 @@ export default function MultiplayerLobby() {
                   <div className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${s.allowStealing ? 'left-7' : 'left-1'}`} />
                 </div>
               </label>
+            </div>
+          )}
+
+          {/* Expansion packs */}
+          {s.includeCards && (
+            <div className="glass rounded-2xl p-4 animate-slide-up">
+              <label className="flex items-center justify-between cursor-pointer">
+                <div>
+                  <span className="font-semibold">{t('setup.themedPacks')}</span>
+                  <p className="text-white/50 text-xs mt-1">{t('setup.themedPacksHint')}</p>
+                </div>
+                <div
+                  className={`w-14 h-8 rounded-full relative transition-colors shrink-0 ms-4 ${showPacks ? 'bg-yellow-500' : 'bg-white/20'}`}
+                  onClick={async () => {
+                    if (showPacks) { setShowPacks(false); await updateSettings({ selectedPacks: [] }); }
+                    else setShowPacks(true);
+                  }}
+                >
+                  <div className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${showPacks ? 'left-7' : 'left-1'}`} />
+                </div>
+              </label>
+              {showPacks && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {themedPacks.filter(pack => !pack.localeOnly || pack.localeOnly === i18n.language).map(pack => {
+                    const active = currentPacks.includes(pack.id);
+                    const label = i18n.language === 'he' ? pack.name.he : pack.name.en;
+                    return (
+                      <button
+                        key={pack.id}
+                        onClick={() => togglePack(pack.id)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${
+                          active
+                            ? 'bg-yellow-500/30 border border-yellow-400/60 text-yellow-200 shadow-lg shadow-yellow-500/10'
+                            : 'bg-white/10 border border-white/10 text-white/70 hover:bg-white/15'
+                        }`}
+                      >
+                        <span>{pack.icon}</span>
+                        <span>{label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 

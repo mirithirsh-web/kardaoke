@@ -202,7 +202,7 @@ export default function GamePlay() {
           'card-gradient-red text-white'
         }`}>
           <div className="text-xs font-semibold mb-1">{t('game.heldCard')}</div>
-          <div className="font-medium">{maestro.heldCard.card.instruction[lang]}</div>
+          <div className="font-medium"><span dir="auto">{maestro.heldCard.card.instruction[lang]}</span></div>
           <div className="text-xs mt-1 opacity-75">
             {maestro.heldCard.roundsRemaining <= 1
               ? t('game.mustUseNow')
@@ -317,7 +317,7 @@ export default function GamePlay() {
               <div className="text-xs font-semibold mb-2 uppercase opacity-75">
                 {t('game.cardInstruction')}
               </div>
-              <div className="text-lg font-bold">{game.activeCard.instruction[lang]}</div>
+              <div className="text-lg font-bold" dir="auto">{game.activeCard.instruction[lang]}</div>
               <div className="text-sm mt-2 opacity-75">+{game.activeCard.bonusPoints} {t('game.points')}</div>
             </div>
           )}
@@ -337,7 +337,7 @@ export default function GamePlay() {
                     }`}
                   >
                     <div className="text-xs opacity-75 mb-1">🕵️ {owner?.name}</div>
-                    <div className="font-bold text-sm">{sel.card.instruction[lang]}</div>
+                    <div className="font-bold text-sm" dir="auto">{sel.card.instruction[lang]}</div>
                     <div className="text-xs mt-1 opacity-75">+{sel.card.bonusPoints} {t('game.points')}</div>
                   </div>
                 );
@@ -380,7 +380,7 @@ export default function GamePlay() {
                 'card-gradient-red text-white'
               }`}
             >
-              <div className="font-bold">{card.instruction[lang]}</div>
+              <div className="font-bold" dir="auto">{card.instruction[lang]}</div>
               <div className="text-sm mt-1 opacity-75">+{card.bonusPoints} {t('game.points')}</div>
             </div>
           ))}
@@ -438,7 +438,7 @@ export default function GamePlay() {
                         {isSelected && '✓'}
                       </div>
                       <div className="flex-1">
-                        <div className={`text-sm font-medium ${
+                        <div dir="auto" className={`text-sm font-medium ${
                           card.color === 'yellow' ? 'text-yellow-300' :
                           card.color === 'blue' ? 'text-blue-300' :
                           'text-red-300'
@@ -609,7 +609,7 @@ export default function GamePlay() {
                         {fulfilledAdvancedCards.includes(card.id) && '✓'}
                       </div>
                       <div className="flex-1">
-                        <div className={`text-sm font-medium ${
+                        <div dir="auto" className={`text-sm font-medium ${
                           card.color === 'yellow' ? 'text-yellow-300' :
                           card.color === 'blue' ? 'text-blue-300' :
                           'text-red-300'
@@ -657,7 +657,7 @@ export default function GamePlay() {
                         </div>
                         <div className="flex-1">
                           <div className="text-xs text-white/50 mb-1">🕵️ {owner?.name}</div>
-                          <div className={`text-sm font-medium ${
+                          <div dir="auto" className={`text-sm font-medium ${
                             sel.card.color === 'yellow' ? 'text-yellow-300' :
                             sel.card.color === 'blue' ? 'text-blue-300' :
                             'text-red-300'

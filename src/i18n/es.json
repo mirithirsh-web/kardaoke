@@ -26,6 +26,8 @@
     "includeCards": "Incluir cartas de inspiración",
     "allowStealing": "Permitir robo de cartas",
     "allowStealingHint": "El Maestro puede robar cartas visibles de otros jugadores en lugar de sacar una",
+    "themedPacks": "Themed Packs",
+    "themedPacksHint": "Add extra themed cards to the yellow deck",
     "startGame": "¡Empezar!",
     "minPlayers": "Agrega al menos 2 jugadores",
     "removePlayer": "Eliminar"

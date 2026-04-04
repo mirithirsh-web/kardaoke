@@ -111,7 +111,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
 
   const initGame = useCallback(async () => {
     if (!roomCode || !settings) return;
-    const decks = createDecks();
+    const decks = createDecks(settings.selectedPacks || []);
 
     const initialScores: MultiplayerScores = {};
     for (const p of sortedPlayers) {

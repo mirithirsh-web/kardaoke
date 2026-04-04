@@ -26,6 +26,8 @@
     "includeCards": "כלול קלפי השראה",
     "allowStealing": "אפשר גניבת קלפים",
     "allowStealingHint": "המאסטרו יכול לגנוב קלפים גלויים משחקנים אחרים במקום לשלוף",
+    "themedPacks": "חבילות הרחבה",
+    "themedPacksHint": "הוסיפו קלפים נוספים לחפיסה הצהובה",
     "startGame": "התחל משחק!",
     "minPlayers": "הוסיפו לפחות 2 שחקנים",
     "removePlayer": "הסר"

@@ -1,4 +1,5 @@
 import type { InspirationCard } from '../types';
+import { getThemedCards } from './themedPacks';
 
 export const yellowCards: InspirationCard[] = [
   { id: 'y01', color: 'yellow', instruction: { en: 'A song that mentions a body part', he: 'שיר שיש בו איבר/חלק בגוף', es: 'Una canción que mencione una parte del cuerpo', fr: 'Une chanson qui mentionne une partie du corps' }, bonusPoints: 5, copies: 1 },
@@ -142,9 +143,10 @@ export function reshuffleDecks(decks: { yellow: InspirationCard[]; blue: Inspira
   };
 }
 
-export function createDecks() {
+export function createDecks(selectedPacks: string[] = []) {
+  const extraYellow = getThemedCards(selectedPacks);
   return {
-    yellow: shuffleDeck(expandDeck(yellowCards)),
+    yellow: shuffleDeck(expandDeck([...yellowCards, ...extraYellow])),
     blue: shuffleDeck(expandDeck(blueCards)),
     red: shuffleDeck(expandDeck(redCards)),
   };

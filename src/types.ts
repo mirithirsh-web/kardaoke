@@ -90,6 +90,7 @@ export interface RoomSettings {
   rounds: number;
   includeCards: boolean;
   allowStealing: boolean;
+  selectedPacks: string[];
 }
 
 export interface PublicCardInfo {

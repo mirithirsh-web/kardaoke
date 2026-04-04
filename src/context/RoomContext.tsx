@@ -114,7 +114,7 @@ export function RoomProvider({ children }: { children: ReactNode }) {
         createdBy: uid,
         createdAt: Date.now(),
         status: 'lobby',
-        settings: { rounds: 5, includeCards: true, allowStealing: false },
+        settings: { rounds: 5, includeCards: true, allowStealing: false, selectedPacks: [] },
         players: {
           [uid]: { name, order: 0, connected: true },
         },
@@ -204,7 +204,7 @@ export function RoomProvider({ children }: { children: ReactNode }) {
 
   const updateSettings = useCallback(async (partial: Partial<RoomSettings>) => {
     if (!roomCode || !isCreator) return;
-    const current = settings || { rounds: 5, includeCards: true, allowStealing: false };
+    const current = settings || { rounds: 5, includeCards: true, allowStealing: false, selectedPacks: [] as string[] };
     await set(roomRef(roomCode, 'settings'), { ...current, ...partial });
   }, [roomCode, isCreator, settings]);
 

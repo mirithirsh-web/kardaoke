@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGame } from '../context/GameContext';
+import { themedPacks } from '../data/themedPacks';
 
 export default function GameSetup() {
   const { t, i18n } = useTranslation();
@@ -9,6 +10,8 @@ export default function GameSetup() {
   const [rounds, setRounds] = useState(5);
   const [includeCards, setIncludeCards] = useState(true);
   const [allowStealing, setAllowStealing] = useState(false);
+  const [selectedPacks, setSelectedPacks] = useState<string[]>([]);
+  const [showPacks, setShowPacks] = useState(false);
   const [newName, setNewName] = useState('');
 
   const playerCount = players.filter((p) => p.trim()).length;
@@ -38,6 +41,12 @@ export default function GameSetup() {
 
   const canStart = players.filter((p) => p.trim()).length >= 2;
 
+  const togglePack = (packId: string) => {
+    setSelectedPacks(prev =>
+      prev.includes(packId) ? prev.filter(id => id !== packId) : [...prev, packId]
+    );
+  };
+
   const startGame = () => {
     const validPlayers = players.filter((p) => p.trim()).map((p) => p.trim());
     dispatch({
@@ -47,6 +56,7 @@ export default function GameSetup() {
       includeCards,
       allowStealing: includeCards && allowStealing,
       locale: i18n.language,
+      selectedPacks: includeCards ? selectedPacks : [],
     });
   };
 
@@ -169,6 +179,55 @@ export default function GameSetup() {
                 />
               </div>
             </label>
+          </div>
+        )}
+
+        {/* Expansion packs -- only visible when cards are enabled */}
+        {includeCards && (
+          <div className="glass rounded-2xl p-5 animate-slide-up">
+            <label className="flex items-center justify-between cursor-pointer">
+              <div>
+                <span className="text-lg font-semibold">{t('setup.themedPacks')}</span>
+                <p className="text-white/50 text-sm mt-1">{t('setup.themedPacksHint')}</p>
+              </div>
+              <div
+                className={`w-14 h-8 rounded-full relative transition-colors shrink-0 ms-4 ${
+                  showPacks ? 'bg-yellow-500' : 'bg-white/20'
+                }`}
+                onClick={() => {
+                  if (showPacks) { setShowPacks(false); setSelectedPacks([]); }
+                  else setShowPacks(true);
+                }}
+              >
+                <div
+                  className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${
+                    showPacks ? 'left-7' : 'left-1'
+                  }`}
+                />
+              </div>
+            </label>
+            {showPacks && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {themedPacks.filter(pack => !pack.localeOnly || pack.localeOnly === i18n.language).map(pack => {
+                  const active = selectedPacks.includes(pack.id);
+                  const label = i18n.language === 'he' ? pack.name.he : pack.name.en;
+                  return (
+                    <button
+                      key={pack.id}
+                      onClick={() => togglePack(pack.id)}
+                      className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                        active
+                          ? 'bg-yellow-500/30 border border-yellow-400/60 text-yellow-200 shadow-lg shadow-yellow-500/10'
+                          : 'bg-white/10 border border-white/10 text-white/70 hover:bg-white/15'
+                      }`}
+                    >
+                      <span>{pack.icon}</span>
+                      <span>{label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 

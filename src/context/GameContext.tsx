@@ -11,7 +11,7 @@ interface AppState {
 
 type Action =
   | { type: 'SET_SCREEN'; screen: Screen }
-  | { type: 'START_GAME'; players: string[]; rounds: number; includeCards: boolean; allowStealing: boolean; locale: string }
+  | { type: 'START_GAME'; players: string[]; rounds: number; includeCards: boolean; allowStealing: boolean; locale: string; selectedPacks?: string[] }
   | { type: 'SET_TURN_PHASE'; phase: TurnPhase }
   | { type: 'DRAW_CARD'; card: InspirationCard; deckColor: 'yellow' | 'blue' | 'red' }
   | { type: 'SET_ACTIVE_CARD'; card: InspirationCard | null }
@@ -74,7 +74,7 @@ function reducer(state: AppState, action: Action): AppState {
         totalRounds: action.rounds,
         turnPhase: 'choose-action',
         usedSongs: [],
-        cardDecks: createDecks(),
+        cardDecks: createDecks(action.selectedPacks || []),
         includeCards: action.includeCards,
         allowStealing: action.allowStealing,
         scoreHistory: [],

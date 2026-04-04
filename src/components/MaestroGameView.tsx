@@ -153,7 +153,7 @@ export default function MaestroGameView() {
           'card-gradient-red text-white'
         }`}>
           <div className="text-xs font-semibold mb-1">{t('game.heldCard')}</div>
-          <div className="font-medium">{myScores.heldCard.card.instruction[lang]}</div>
+          <div className="font-medium" dir="auto">{myScores.heldCard.card.instruction[lang]}</div>
           <div className="text-xs mt-1 opacity-75">
             {myScores.heldCard.roundsRemaining <= 1 ? t('game.mustUseNow') : `${myScores.heldCard.roundsRemaining} ${t('game.roundsLeft')}`}
           </div>
@@ -240,7 +240,7 @@ export default function MaestroGameView() {
               'card-gradient-red text-white'
             }`}>
               <div className="text-xs font-semibold mb-2 uppercase opacity-75">{t('game.cardInstruction')}</div>
-              <div className="text-lg font-bold">{privateCard.instruction[lang]}</div>
+              <div className="text-lg font-bold" dir="auto">{privateCard.instruction[lang]}</div>
               <div className="text-sm mt-2 opacity-75">+{privateCard.bonusPoints} {t('game.points')}</div>
             </div>
           )}
@@ -254,7 +254,7 @@ export default function MaestroGameView() {
                   card.color === 'blue' ? 'card-gradient-blue text-white' :
                   'card-gradient-red text-white'
                 }`}>
-                  <div className="font-bold">{card.instruction[lang]}</div>
+                  <div className="font-bold" dir="auto">{card.instruction[lang]}</div>
                   <div className="text-sm mt-1 opacity-75">+{card.bonusPoints} {t('game.points')}</div>
                 </div>
               ))}
@@ -298,7 +298,7 @@ export default function MaestroGameView() {
               card.color === 'blue' ? 'card-gradient-blue text-white' :
               'card-gradient-red text-white'
             }`}>
-              <div className="font-bold">{card.instruction[lang]}</div>
+              <div className="font-bold" dir="auto">{card.instruction[lang]}</div>
               <div className="text-sm mt-1 opacity-75">+{card.bonusPoints} {t('game.points')}</div>
             </div>
           ))}
@@ -329,7 +329,7 @@ export default function MaestroGameView() {
                           isSelected ? 'border-purple-400 bg-purple-400 text-white' : 'border-white/30'
                         }`}>{isSelected && '✓'}</div>
                         <div className="flex-1">
-                          <div className={`text-sm font-medium ${
+                          <div dir="auto" className={`text-sm font-medium ${
                             card.color === 'yellow' ? 'text-yellow-300' : card.color === 'blue' ? 'text-blue-300' : 'text-red-300'
                           }`}>{card.instruction[lang]}</div>
                           <div className="text-xs text-white/50">+{card.bonusPoints} {t('game.points')}</div>
@@ -429,7 +429,7 @@ export default function MaestroGameView() {
                         fulfilledAdvancedCards.includes(card.id) ? 'border-green-400 bg-green-400 text-white' : 'border-white/30'
                       }`}>{fulfilledAdvancedCards.includes(card.id) && '✓'}</div>
                       <div className="flex-1">
-                        <div className={`text-sm font-medium ${
+                        <div dir="auto" className={`text-sm font-medium ${
                           card.color === 'yellow' ? 'text-yellow-300' : card.color === 'blue' ? 'text-blue-300' : 'text-red-300'
                         }`}>{card.instruction[lang]}</div>
                       </div>
@@ -464,7 +464,7 @@ export default function MaestroGameView() {
                         }`}>{fulfilledStolenCards.includes(sel.card.id) && '✓'}</div>
                         <div className="flex-1">
                           <div className="text-xs text-white/50 mb-1">🕵️ {owner?.name}</div>
-                          <div className={`text-sm font-medium ${
+                          <div dir="auto" className={`text-sm font-medium ${
                             sel.card.color === 'yellow' ? 'text-yellow-300' : sel.card.color === 'blue' ? 'text-blue-300' : 'text-red-300'
                           }`}>{sel.card.instruction[lang]}</div>
                         </div>
