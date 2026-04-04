@@ -39,12 +39,12 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center justify-center px-6 pt-16 pb-6 text-white">
-      <div dir="ltr" className="fixed top-4 right-4 z-50 flex gap-2">
+    <div className="h-[100dvh] relative flex flex-col items-center px-6 pt-14 pb-4 text-white overflow-hidden">
+      <div dir="ltr" className="absolute top-3 right-3 z-50 flex gap-2">
         <div ref={langRef} className="relative">
           <button
             onClick={() => setLangOpen(!langOpen)}
-            className="btn-secondary text-sm px-4 py-2 flex items-center gap-1.5"
+            className="btn-secondary text-sm px-3 py-1.5 flex items-center gap-1.5"
           >
             <span>{currentLang.flag}</span>
             <span>{currentLang.label}</span>
@@ -70,48 +70,50 @@ export default function Home() {
         </div>
         <button
           onClick={toggleMute}
-          className="btn-secondary text-sm px-3 py-2"
+          className="btn-secondary text-sm px-3 py-1.5"
           title={isMuted ? t('app.soundOff') : t('app.soundOn')}
         >
           {isMuted ? '🔇' : '🔊'}
         </button>
       </div>
 
-      <div className="animate-float mb-6 relative z-0">
-        <img src={logoImg} alt="Kardaoke!" className="w-48 h-48 object-contain drop-shadow-2xl rounded-3xl" style={{ mixBlendMode: 'screen' }} />
-      </div>
+      <div className="flex-1 flex flex-col items-center justify-center w-full">
+        <div className="animate-float mb-3 relative z-0">
+          <img src={logoImg} alt="Kardaoke!" className="w-36 h-36 object-contain drop-shadow-2xl rounded-2xl" style={{ mixBlendMode: 'screen' }} />
+        </div>
 
-      <h1 dir="ltr" className="text-5xl font-bold mb-2 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
-        Kardaoke!
-      </h1>
-      <p className="text-lg text-white/70 mb-10">{t('app.tagline')}</p>
+        <h1 dir="ltr" className="text-5xl font-bold mb-1 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+          Kardaoke!
+        </h1>
+        <p className="text-lg text-white/70 mb-8">{t('app.tagline')}</p>
 
-      <div className="flex flex-col gap-4 w-full max-w-xs">
-        <button
-          onClick={() => dispatch({ type: 'SET_SCREEN', screen: 'mode-select' })}
-          className="btn-primary text-lg"
-        >
-          {t('home.newGame')}
-        </button>
-
-        {hasSavedGame && (
+        <div className="flex flex-col gap-3 w-full max-w-xs">
           <button
-            onClick={() => dispatch({ type: 'RESUME_GAME' })}
+            onClick={() => dispatch({ type: 'SET_SCREEN', screen: 'mode-select' })}
+            className="btn-primary text-lg"
+          >
+            {t('home.newGame')}
+          </button>
+
+          {hasSavedGame && (
+            <button
+              onClick={() => dispatch({ type: 'RESUME_GAME' })}
+              className="btn-secondary"
+            >
+              {t('home.resumeGame')}
+            </button>
+          )}
+
+          <button
+            onClick={() => dispatch({ type: 'SET_SCREEN', screen: 'rules' })}
             className="btn-secondary"
           >
-            {t('home.resumeGame')}
+            {t('home.howToPlay')}
           </button>
-        )}
-
-        <button
-          onClick={() => dispatch({ type: 'SET_SCREEN', screen: 'rules' })}
-          className="btn-secondary"
-        >
-          {t('home.howToPlay')}
-        </button>
+        </div>
       </div>
 
-      <div className="mt-auto pt-12 pb-4 text-center text-white/30 text-xs">
+      <div className="pt-2 pb-1 text-center text-white/30 text-xs">
         {t('home.copyright', { year: new Date().getFullYear() })}
       </div>
     </div>
