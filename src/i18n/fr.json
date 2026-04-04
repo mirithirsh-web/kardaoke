@@ -95,7 +95,8 @@
     "usedAdvancedDraw": "Déjà utilisé cette partie",
     "cardNeedsSinger": "La carte ne peut être accomplie que si au moins un Choriste a bien chanté la suite",
     "advancedFulfilledTitle": "Quelles cartes ont été accomplies ?",
-    "advancedNeedTwo": "Il faut au moins 2 cartes accomplies pour la pioche avancée"
+    "advancedNeedTwo": "Il faut au moins 2 cartes accomplies pour la pioche avancée",
+    "waitingForSingers": "En attente de la réponse de tous les chanteurs..."
   },
   "scoreboard": {
     "title": "Tableau des scores",

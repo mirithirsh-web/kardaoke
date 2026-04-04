@@ -95,7 +95,8 @@
     "usedAdvancedDraw": "כבר שומש במשחק הזה",
     "cardNeedsSinger": "הקלף מתקיים רק אם לפחות זמר ליווי אחד שר נכון",
     "advancedFulfilledTitle": "אילו קלפים מולאו?",
-    "advancedNeedTwo": "צריך לפחות 2 קלפים שמולאו לשליפה מתקדמת"
+    "advancedNeedTwo": "צריך לפחות 2 קלפים שמולאו לשליפה מתקדמת",
+    "waitingForSingers": "ממתינים לתשובות של כל השחקנים..."
   },
   "scoreboard": {
     "title": "טבלת ניקוד",

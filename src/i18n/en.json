@@ -95,7 +95,8 @@
     "usedAdvancedDraw": "Already used this game",
     "cardNeedsSinger": "Card can only be fulfilled if at least one Backup Singer sang correctly",
     "advancedFulfilledTitle": "Which cards were fulfilled?",
-    "advancedNeedTwo": "You need at least 2 fulfilled cards for the advanced draw"
+    "advancedNeedTwo": "You need at least 2 fulfilled cards for the advanced draw",
+    "waitingForSingers": "Waiting for all singers to respond..."
   },
   "scoreboard": {
     "title": "Scoreboard",

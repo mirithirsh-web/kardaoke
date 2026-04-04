@@ -484,8 +484,11 @@ export default function MaestroGameView() {
           )}
 
           {(() => {
+            const allResponded = backupSingers.every(
+              (s) => singerResponses[s.uid] !== undefined || !s.connected
+            );
             const advBlocked = game.advancedDrawCards && correctCount > 0 && fulfilledAdvancedCards.length < 2;
-            const isDisabled = advBlocked || scoring;
+            const isDisabled = advBlocked || scoring || !allResponded;
             return (
               <>
                 {scoreError && (
@@ -497,6 +500,9 @@ export default function MaestroGameView() {
                   className={`btn-primary w-full text-lg py-4 ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
                   {scoring ? '⏳...' : t('game.confirmScoring')}
                 </button>
+                {!allResponded && (
+                  <p className="text-center text-sm text-white/50 mt-1">{t('game.waitingForSingers')}</p>
+                )}
               </>
             );
           })()}
