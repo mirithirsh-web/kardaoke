@@ -110,6 +110,7 @@ export interface MultiplayerGameState {
   allowStealing: boolean;
   publicCard: PublicCardInfo | null;
   activeCard: InspirationCard | null;
+  revealedCard: InspirationCard | null;
   advancedDrawCards: InspirationCard[] | null;
   pendingStolenCards: StolenCardSelection[] | null;
 }

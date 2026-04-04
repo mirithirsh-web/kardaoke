@@ -96,7 +96,8 @@
     "cardNeedsSinger": "La carta solo se cumple si al menos un corista cantó correctamente",
     "advancedFulfilledTitle": "¿Qué cartas se cumplieron?",
     "advancedNeedTwo": "Necesitas al menos 2 cartas cumplidas para el robo avanzado",
-    "waitingForSingers": "Esperando a que todos los cantantes respondan..."
+    "waitingForSingers": "Esperando a que todos los cantantes respondan...",
+    "maestroFulfilledCard": "El Maestro cumplió esta carta"
   },
   "scoreboard": {
     "title": "Puntuación",

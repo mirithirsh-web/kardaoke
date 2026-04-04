@@ -9,12 +9,14 @@ import cardBackRed from '../assets/card-back-red.png';
 const CARD_BACKS = { blue: cardBackBlue, yellow: cardBackYellow, red: cardBackRed } as const;
 
 export default function SpectatorGameView() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     gameState, scores, judging, players, myUid,
     maestroName, maestroUid,
     reportGotItRight,
   } = useMultiplayerGame();
+
+  const lang = (['he', 'es', 'fr'].includes(i18n.language) ? i18n.language : 'en') as 'en' | 'he' | 'es' | 'fr';
 
   const [showAnnouncement, setShowAnnouncement] = useState(true);
   const [responded, setResponded] = useState(false);
@@ -185,6 +187,18 @@ export default function SpectatorGameView() {
               })}
             </div>
           </div>
+
+          {game.revealedCard && (
+            <div className={`rounded-2xl p-5 text-center animate-flip-card ${
+              game.revealedCard.color === 'yellow' ? 'card-gradient-yellow text-gray-900' :
+              game.revealedCard.color === 'blue' ? 'card-gradient-blue text-white' :
+              'card-gradient-red text-white'
+            }`}>
+              <div className="text-xs font-semibold mb-1 uppercase opacity-75">{t('game.maestroFulfilledCard')}</div>
+              <div className="text-lg font-bold" dir="auto">{game.revealedCard.instruction[lang]}</div>
+              <div className="text-sm mt-1 opacity-75">+{game.revealedCard.bonusPoints} {t('game.points')}</div>
+            </div>
+          )}
         </div>
       )}
 
@@ -260,6 +274,18 @@ export default function SpectatorGameView() {
               <p className="text-white/50 text-lg">{t('game.noPoints')}</p>
             )}
           </div>
+
+          {game.revealedCard && (
+            <div className={`rounded-2xl p-4 text-center ${
+              game.revealedCard.color === 'yellow' ? 'card-gradient-yellow text-gray-900' :
+              game.revealedCard.color === 'blue' ? 'card-gradient-blue text-white' :
+              'card-gradient-red text-white'
+            }`}>
+              <div className="text-xs font-semibold mb-1 uppercase opacity-75">{t('game.maestroFulfilledCard')}</div>
+              <div className="font-bold" dir="auto">{game.revealedCard.instruction[lang]}</div>
+              <div className="text-sm mt-1 opacity-75">+{game.revealedCard.bonusPoints} {t('game.points')}</div>
+            </div>
+          )}
 
           <div className="glass rounded-2xl p-4 text-center animate-pulse-glow">
             <p className="text-white/60">{t('mp.waitingForNext')}</p>

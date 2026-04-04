@@ -16,7 +16,7 @@ export default function MaestroGameView() {
   const {
     gameState, scores, judging, privateCard, players, myUid,
     maestroName, setTurnPhase, drawCard, doAdvancedDraw,
-    startJudging, confirmScore, selectStealCards,
+    startJudging, revealCard, confirmScore, selectStealCards,
     nextTurn, skipTurn,
   } = useMultiplayerGame();
   const { play } = useSound();
@@ -400,10 +400,10 @@ export default function MaestroGameView() {
                 <p className="text-white/40 text-sm">{t('game.cardNeedsSinger')}</p>
               ) : (
                 <div className="flex gap-3">
-                  <button onClick={() => setCardFulfilled(true)}
+                  <button onClick={() => { setCardFulfilled(true); revealCard(game.activeCard); }}
                     className={`flex-1 py-3 rounded-xl font-semibold transition-all ${cardFulfilled ? 'bg-green-500/30 ring-2 ring-green-400' : 'bg-white/5'}`}
                   >{t('game.yes')}</button>
-                  <button onClick={() => setCardFulfilled(false)}
+                  <button onClick={() => { setCardFulfilled(false); revealCard(null); }}
                     className={`flex-1 py-3 rounded-xl font-semibold transition-all ${!cardFulfilled ? 'bg-red-500/30 ring-2 ring-red-400' : 'bg-white/5'}`}
                   >{t('game.no')}</button>
                 </div>

@@ -71,7 +71,7 @@
     "medium": "בינוני",
     "hard": "קשה",
     "cardInstruction": "הוראת הקלף שלך",
-    "cardFulfilled": "הקלף מולא?",
+    "cardFulfilled": "האם עמדת בתנאי הקלף?",
     "yes": "כן",
     "no": "לא",
     "heldCard": "קלף שמור",
@@ -96,7 +96,8 @@
     "cardNeedsSinger": "הקלף מתקיים רק אם לפחות זמר ליווי אחד שר נכון",
     "advancedFulfilledTitle": "אילו קלפים מולאו?",
     "advancedNeedTwo": "צריך לפחות 2 קלפים שמולאו לשליפה מתקדמת",
-    "waitingForSingers": "ממתינים לתשובות של כל השחקנים..."
+    "waitingForSingers": "ממתינים לתשובות של כל השחקנים...",
+    "maestroFulfilledCard": "המאסטרו עמד בתנאי הקלף"
   },
   "scoreboard": {
     "title": "טבלת ניקוד",

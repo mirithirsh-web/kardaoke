@@ -38,6 +38,7 @@ interface MPGameContextType {
   startSinging: (songName?: string) => Promise<void>;
   startJudging: (wordCount: number) => Promise<void>;
   reportGotItRight: (didGetIt: boolean) => Promise<void>;
+  revealCard: (card: InspirationCard | null) => Promise<void>;
   confirmScore: (args: ConfirmScoreArgs) => Promise<void>;
   selectStealCards: (selections: StolenCardSelection[]) => Promise<void>;
   nextTurn: () => Promise<void>;
@@ -133,6 +134,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       allowStealing: settings.allowStealing,
       publicCard: null,
       activeCard: null,
+      revealedCard: null,
       advancedDrawCards: null,
       pendingStolenCards: null,
     };
@@ -218,6 +220,11 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
     if (!roomCode || !myUid) return;
     await set(roomRef(roomCode, 'judging', 'singerResponses', myUid), didGetIt);
   }, [roomCode, myUid]);
+
+  const revealCard = useCallback(async (card: InspirationCard | null) => {
+    if (!roomCode || !isMaestro) return;
+    await set(roomRef(roomCode, 'game', 'revealedCard'), card ? sanitize(card) : null);
+  }, [roomCode, isMaestro]);
 
   const confirmScore = useCallback(async ({ cardFulfilled, fulfilledAdvancedCardIds, fulfilledStolenCardIds, songName }: ConfirmScoreArgs) => {
     console.log('[confirmScore] called', { roomCode, myUid });
@@ -440,6 +447,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       advancedDrawCards: null,
       pendingStolenCards: null,
       publicCard: null,
+      revealedCard: null,
       turnsPlayedThisRound: roundComplete ? 0 : turnsPlayed,
     });
     await set(roomRef(roomCode, 'judging'), null);
@@ -506,6 +514,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       advancedDrawCards: null,
       pendingStolenCards: null,
       publicCard: null,
+      revealedCard: null,
       turnsPlayedThisRound: roundComplete ? 0 : turnsPlayed,
     });
     await set(roomRef(roomCode, 'judging'), null);
@@ -516,7 +525,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       gameState, scores, judging, privateCard, players: sortedPlayers,
       myUid, isMaestro, maestroUid, maestroName,
       initGame, setTurnPhase, drawCard, doAdvancedDraw, startSinging, startJudging,
-      reportGotItRight, confirmScore, selectStealCards,
+      reportGotItRight, revealCard, confirmScore, selectStealCards,
       nextTurn, skipTurn,
     }}>
       {children}
