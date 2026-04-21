@@ -16,7 +16,7 @@ export default function MaestroGameView() {
   const {
     gameState, scores, judging, privateCard, players, myUid,
     maestroName, setTurnPhase, drawCard, doAdvancedDraw,
-    startJudging, revealCard, confirmScore, selectStealCards,
+    startJudging, revealCard, confirmScore, selectStealCards, abandonCurrentPlay,
     nextTurn, skipTurn,
   } = useMultiplayerGame();
   const { play } = useSound();
@@ -52,6 +52,18 @@ export default function MaestroGameView() {
   });
   const canSteal = game.allowStealing && playersWithCards.length >= 2;
 
+  const canAbandonCurrentPlay =
+    (game.turnPhase === 'singing' || game.turnPhase === 'advanced-draw') &&
+    !!(privateCard || game.activeCard || (game.advancedDrawCards && game.advancedDrawCards.length > 0) || (game.pendingStolenCards && game.pendingStolenCards.length > 0));
+
+  const handleAbandon = async () => {
+    setCardFulfilled(false);
+    setFulfilledAdvancedCards([]);
+    setFulfilledStolenCards([]);
+    setStealSelections([]);
+    await abandonCurrentPlay();
+  };
+
   const handleDrawCard = async (color: CardColor) => {
     play('cardDraw');
     await drawCard(color);
@@ -64,6 +76,9 @@ export default function MaestroGameView() {
 
   const handleProceedToJudging = async () => {
     await startJudging(wordCount);
+    setCardFulfilled(false);
+    setFulfilledAdvancedCards([]);
+    setFulfilledStolenCards([]);
   };
 
   const handleScoreTurn = async () => {
@@ -227,6 +242,9 @@ export default function MaestroGameView() {
           <button onClick={() => setTurnPhase('choose-action')} className="btn-secondary w-full mt-2">
             ← {t('rules.back')}
           </button>
+          <button onClick={handleSkip} className="btn-secondary w-full opacity-60">
+            ⏭ {t('game.skipTurn')}
+          </button>
         </div>
       )}
 
@@ -285,6 +303,14 @@ export default function MaestroGameView() {
           <button onClick={handleProceedToJudging} className="btn-primary w-full">
             🎵 {t('mp.doneSinging')}
           </button>
+          {canAbandonCurrentPlay && (
+            <button type="button" onClick={handleAbandon} className="btn-secondary w-full">
+              {t('game.abandonPlay')}
+            </button>
+          )}
+          <button type="button" onClick={handleSkip} className="btn-secondary w-full opacity-60">
+            ⏭ {t('game.skipTurn')}
+          </button>
         </div>
       )}
 
@@ -304,6 +330,12 @@ export default function MaestroGameView() {
           ))}
           <button onClick={() => setTurnPhase('singing')} className="btn-primary w-full">
             🎵 {t('game.iHaveASong')}
+          </button>
+          <button type="button" onClick={handleAbandon} className="btn-secondary w-full">
+            {t('game.abandonPlay')}
+          </button>
+          <button type="button" onClick={handleSkip} className="btn-secondary w-full opacity-60">
+            ⏭ {t('game.skipTurn')}
           </button>
         </div>
       )}
@@ -416,7 +448,22 @@ export default function MaestroGameView() {
             <div className="glass rounded-2xl p-5">
               <h3 className="font-semibold mb-3">{t('game.advancedFulfilledTitle')}</h3>
               {correctCount === 0 ? (
-                <p className="text-white/40 text-sm">{t('game.cardNeedsSinger')}</p>
+                <div className="space-y-3">
+                  <p className="text-white/70 text-sm">{t('game.advancedNoneCorrectExplain')}</p>
+                  <div className="space-y-2">
+                    {game.advancedDrawCards.map((card) => (
+                      <div key={card.id} className={`rounded-xl p-3 text-left ${
+                        card.color === 'yellow' ? 'bg-yellow-500/10 border border-yellow-400/20' :
+                        card.color === 'blue' ? 'bg-blue-500/10 border border-blue-400/20' :
+                        'bg-red-500/10 border border-red-400/20'
+                      }`}>
+                        <div dir="auto" className={`text-sm font-medium ${
+                          card.color === 'yellow' ? 'text-yellow-200' : card.color === 'blue' ? 'text-blue-200' : 'text-red-200'
+                        }`}>{card.instruction[lang]}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <div className="space-y-3">
                   {game.advancedDrawCards.map((card) => (
@@ -448,7 +495,20 @@ export default function MaestroGameView() {
             <div className="glass rounded-2xl p-5">
               <h3 className="font-semibold mb-3">{t('game.stealFulfilled')}</h3>
               {correctCount === 0 ? (
-                <p className="text-white/40 text-sm">{t('game.cardNeedsSinger')}</p>
+                <div className="space-y-3">
+                  <p className="text-white/70 text-sm">{t('game.stealNoneCorrectExplain')}</p>
+                  <div className="space-y-2">
+                    {game.pendingStolenCards.map((sel) => {
+                      const owner = players.find(p => p.uid === sel.fromPlayerId);
+                      return (
+                        <div key={sel.card.id} className="rounded-xl p-3 text-left bg-white/5 border border-white/10">
+                          <div className="text-xs text-white/50 mb-1">🕵️ {owner?.name}</div>
+                          <div dir="auto" className="text-sm font-medium text-purple-200">{sel.card.instruction[lang]}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               ) : (
                 <div className="space-y-3">
                   {game.pendingStolenCards.map((sel) => {

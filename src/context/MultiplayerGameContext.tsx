@@ -10,8 +10,40 @@ function sanitize<T>(obj: T): T {
 import type {
   InspirationCard, CardColor, TurnPhase, TurnScore,
   MultiplayerGameState, MultiplayerScores, JudgingState,
-  RoomPlayer, StolenCardSelection,
+  RoomPlayer, StolenCardSelection, HeldCard,
 } from '../types';
+
+type CardDecks = { yellow: InspirationCard[]; blue: InspirationCard[]; red: InspirationCard[] };
+
+/** Push active / advanced-draw cards back onto piles (not stolen refs). Skips activeCard when it is the maestro's held card (same id). */
+async function appendInPlayCardsBackToDecks(
+  roomCode: string,
+  g: MultiplayerGameState,
+  decks: CardDecks,
+  maestroHeld: HeldCard | null | undefined,
+): Promise<{ hadAdvancedDraw: boolean }> {
+  const newDecks: CardDecks = {
+    yellow: [...(decks.yellow || [])],
+    blue: [...(decks.blue || [])],
+    red: [...(decks.red || [])],
+  };
+  let hadAdvancedDraw = false;
+  if (g.advancedDrawCards?.length) {
+    hadAdvancedDraw = true;
+    for (const card of g.advancedDrawCards) {
+      newDecks[card.color] = [...newDecks[card.color], card];
+    }
+  }
+  if (g.activeCard) {
+    const fromHeld = maestroHeld?.card && g.activeCard.id === maestroHeld.card.id;
+    if (!fromHeld) {
+      const c = g.activeCard.color;
+      newDecks[c] = [...newDecks[c], g.activeCard];
+    }
+  }
+  await set(roomRef(roomCode, 'cardDecks'), sanitize(newDecks));
+  return { hadAdvancedDraw };
+}
 
 interface ConfirmScoreArgs {
   cardFulfilled: boolean;
@@ -41,6 +73,7 @@ interface MPGameContextType {
   revealCard: (card: InspirationCard | null) => Promise<void>;
   confirmScore: (args: ConfirmScoreArgs) => Promise<void>;
   selectStealCards: (selections: StolenCardSelection[]) => Promise<void>;
+  abandonCurrentPlay: () => Promise<void>;
   nextTurn: () => Promise<void>;
   skipTurn: () => Promise<void>;
 }
@@ -226,6 +259,44 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
     await set(roomRef(roomCode, 'game', 'revealedCard'), card ? sanitize(card) : null);
   }, [roomCode, isMaestro]);
 
+  const abandonCurrentPlay = useCallback(async () => {
+    if (!roomCode || !isMaestro || !myUid) return;
+    const [gameSnap, scoresSnap, decksSnap] = await Promise.all([
+      get(roomRef(roomCode, 'game')),
+      get(roomRef(roomCode, 'scores')),
+      get(roomRef(roomCode, 'cardDecks')),
+    ]);
+    const g: MultiplayerGameState | null = gameSnap.val();
+    const sc: MultiplayerScores = scoresSnap.val() || {};
+    const decks = decksSnap.val() as CardDecks | null;
+    if (!g) return;
+
+    const phase = g.turnPhase;
+    const hasInPlay = !!(g.activeCard || g.advancedDrawCards?.length || g.pendingStolenCards?.length);
+    if (!hasInPlay) return;
+    if (phase !== 'singing' && phase !== 'advanced-draw') return;
+
+    const myHeld = sc[myUid]?.heldCard;
+    if (g.advancedDrawCards?.length || g.activeCard) {
+      const safeDecks: CardDecks = decks || { yellow: [], blue: [], red: [] };
+      const { hadAdvancedDraw } = await appendInPlayCardsBackToDecks(roomCode, g, safeDecks, myHeld);
+      if (hadAdvancedDraw) {
+        await set(roomRef(roomCode, 'scores', myUid, 'hasUsedAdvancedDraw'), false);
+      }
+    }
+
+    await update(roomRef(roomCode, 'game'), sanitize({
+      turnPhase: 'choose-action',
+      activeCard: null,
+      publicCard: null,
+      revealedCard: null,
+      advancedDrawCards: null,
+      pendingStolenCards: null,
+    }));
+    await set(roomRef(roomCode, 'privateCard', myUid), null);
+    await set(roomRef(roomCode, 'judging'), null);
+  }, [roomCode, isMaestro, myUid]);
+
   const confirmScore = useCallback(async ({ cardFulfilled, fulfilledAdvancedCardIds, fulfilledStolenCardIds, songName }: ConfirmScoreArgs) => {
     console.log('[confirmScore] called', { roomCode, myUid });
     if (!roomCode || !myUid) {
@@ -262,6 +333,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       turnPhase: 'summary',
       activeCard: null,
       publicCard: null,
+      revealedCard: null,
     };
     const rawScore = sc[myUid] || {};
     const myScore = {
@@ -459,10 +531,11 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
   const skipTurn = useCallback(async () => {
     if (!roomCode) return;
 
-    const [gameSnap, scoresSnap, playersSnap] = await Promise.all([
+    const [gameSnap, scoresSnap, playersSnap, decksSnap] = await Promise.all([
       get(roomRef(roomCode, 'game')),
       get(roomRef(roomCode, 'scores')),
       get(roomRef(roomCode, 'players')),
+      get(roomRef(roomCode, 'cardDecks')),
     ]);
     const freshGame: MultiplayerGameState | null = gameSnap.val();
     const freshScores: MultiplayerScores = scoresSnap.val() || {};
@@ -470,10 +543,24 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
     const freshPlayers: RoomPlayer[] = Object.entries(freshPlayersRaw)
       .map(([uid, data]) => ({ uid, ...(data as Omit<RoomPlayer, 'uid'>) }))
       .sort((a, b) => a.order - b.order);
+    const decks = decksSnap.val() as CardDecks | null;
 
     if (!freshGame) return;
 
     const numPlayers = freshPlayers.length;
+    const skipMaestroUid = numPlayers > 0
+      ? freshPlayers[freshGame.currentMaestroIndex % numPlayers]?.uid
+      : null;
+    const hasDrawnToReturn = !!(freshGame.activeCard || freshGame.advancedDrawCards?.length);
+    if (hasDrawnToReturn && skipMaestroUid) {
+      const mHeld = freshScores[skipMaestroUid]?.heldCard;
+      const safeDecks: CardDecks = decks || { yellow: [], blue: [], red: [] };
+      const { hadAdvancedDraw } = await appendInPlayCardsBackToDecks(roomCode, freshGame, safeDecks, mHeld);
+      if (hadAdvancedDraw) {
+        await set(roomRef(roomCode, 'scores', skipMaestroUid, 'hasUsedAdvancedDraw'), false);
+      }
+    }
+
     const turnsPlayed = freshGame.turnsPlayedThisRound + 1;
     const roundComplete = turnsPlayed >= numPlayers;
     const newRound = roundComplete ? freshGame.currentRound + 1 : freshGame.currentRound;
@@ -525,7 +612,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       gameState, scores, judging, privateCard, players: sortedPlayers,
       myUid, isMaestro, maestroUid, maestroName,
       initGame, setTurnPhase, drawCard, doAdvancedDraw, startSinging, startJudging,
-      reportGotItRight, revealCard, confirmScore, selectStealCards,
+      reportGotItRight, revealCard, confirmScore, selectStealCards, abandonCurrentPlay,
       nextTurn, skipTurn,
     }}>
       {children}

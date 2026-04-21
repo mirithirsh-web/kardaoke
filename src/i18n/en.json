@@ -97,7 +97,10 @@
     "advancedFulfilledTitle": "Which cards were fulfilled?",
     "advancedNeedTwo": "You need at least 2 fulfilled cards for the advanced draw",
     "waitingForSingers": "Waiting for all singers to respond...",
-    "maestroFulfilledCard": "The Maestro fulfilled this card"
+    "maestroFulfilledCard": "The Maestro fulfilled this card",
+    "abandonPlay": "Return cards & cancel this attempt",
+    "advancedNoneCorrectExplain": "No backup singer got the next line right, so you cannot keep any advanced-draw cards. Once everyone has responded, tap Confirm & score to return all three cards to the decks.",
+    "stealNoneCorrectExplain": "No backup singer got the next line right, so the steal cannot succeed. Once everyone has responded, tap Confirm & score to continue without taking any stolen cards."
   },
   "scoreboard": {
     "title": "Scoreboard",
