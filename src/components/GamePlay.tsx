@@ -148,6 +148,11 @@ export default function GamePlay() {
     dispatch({ type: 'SKIP_TURN' });
   };
 
+  const abandonTurn = () => {
+    resetTurnState();
+    dispatch({ type: 'ABANDON_TURN' });
+  };
+
   const lastTurnScore = game.scoreHistory[game.scoreHistory.length - 1];
 
   return (
@@ -235,7 +240,7 @@ export default function GamePlay() {
             🎤 {t('game.iHaveASong')}
           </button>
 
-          {game.includeCards && !hasHeldCard && (
+          {game.includeCards && !hasHeldCard && !game.hasDrawnCardThisTurn && (
             <>
               <button
                 onClick={() => dispatch({ type: 'SET_TURN_PHASE', phase: 'draw-card' })}
@@ -364,6 +369,16 @@ export default function GamePlay() {
           >
             🎵 {t('game.wordCount')}
           </button>
+          {game.activeCard && (
+            <div className="flex gap-2">
+              <button onClick={abandonTurn} className="btn-secondary flex-1 opacity-60 text-sm">
+                ↩ {t('game.abandonPlay')}
+              </button>
+              <button onClick={skipTurn} className="btn-secondary flex-1 opacity-60 text-sm">
+                ⏭ {t('game.skipTurn')}
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -401,6 +416,14 @@ export default function GamePlay() {
           >
             🎵 {t('game.wordCount')}
           </button>
+          <div className="flex gap-2">
+            <button onClick={abandonTurn} className="btn-secondary flex-1 opacity-60 text-sm">
+              ↩ {t('game.abandonPlay')}
+            </button>
+            <button onClick={skipTurn} className="btn-secondary flex-1 opacity-60 text-sm">
+              ⏭ {t('game.skipTurn')}
+            </button>
+          </div>
         </div>
       )}
 
@@ -620,9 +643,6 @@ export default function GamePlay() {
                       </div>
                     </button>
                   ))}
-                  {fulfilledAdvancedCards.length < 2 && fulfilledAdvancedCards.length > 0 && (
-                    <p className="text-yellow-400/80 text-xs">{t('game.advancedNeedTwo')}</p>
-                  )}
                 </div>
               )}
             </div>
@@ -678,9 +698,8 @@ export default function GamePlay() {
           )}
 
           {(() => {
-            const advancedBlocked = game.advancedDrawCards && correctSingerIds.length > 0 && fulfilledAdvancedCards.length < 2;
             const stealBlocked = game.pendingStolenCards && correctSingerIds.length > 0 && fulfilledStolenCards.length < 2;
-            const isDisabled = advancedBlocked || stealBlocked;
+            const isDisabled = stealBlocked;
             return (
               <button
                 onClick={scoreTurn}

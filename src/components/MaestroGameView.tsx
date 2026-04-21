@@ -193,7 +193,7 @@ export default function MaestroGameView() {
           <button onClick={() => setTurnPhase('singing')} className="btn-primary w-full text-lg py-4">
             🎤 {t('game.iHaveASong')}
           </button>
-          {game.includeCards && !hasHeldCard && (
+          {game.includeCards && !hasHeldCard && !game.hasDrawnCardThisTurn && (
             <>
               <button onClick={() => setTurnPhase('draw-card')} className="btn-secondary w-full">
                 💡 {t('game.drawCard')}
@@ -482,9 +482,6 @@ export default function MaestroGameView() {
                       </div>
                     </button>
                   ))}
-                  {fulfilledAdvancedCards.length > 0 && fulfilledAdvancedCards.length < 2 && (
-                    <p className="text-yellow-400/80 text-xs">{t('game.advancedNeedTwo')}</p>
-                  )}
                 </div>
               )}
             </div>
@@ -547,8 +544,7 @@ export default function MaestroGameView() {
             const allResponded = backupSingers.every(
               (s) => singerResponses[s.uid] !== undefined || !s.connected
             );
-            const advBlocked = game.advancedDrawCards && correctCount > 0 && fulfilledAdvancedCards.length < 2;
-            const isDisabled = advBlocked || scoring || !allResponded;
+            const isDisabled = scoring || !allResponded;
             return (
               <>
                 {scoreError && (

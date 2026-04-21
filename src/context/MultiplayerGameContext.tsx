@@ -21,13 +21,15 @@ async function appendInPlayCardsBackToDecks(
   g: MultiplayerGameState,
   decks: CardDecks,
   maestroHeld: HeldCard | null | undefined,
-): Promise<{ hadAdvancedDraw: boolean }> {
+  keepColoredCardAsHeld = false,
+): Promise<{ hadAdvancedDraw: boolean; heldCardFromSkip: InspirationCard | null }> {
   const newDecks: CardDecks = {
     yellow: [...(decks.yellow || [])],
     blue: [...(decks.blue || [])],
     red: [...(decks.red || [])],
   };
   let hadAdvancedDraw = false;
+  let heldCardFromSkip: InspirationCard | null = null;
   if (g.advancedDrawCards?.length) {
     hadAdvancedDraw = true;
     for (const card of g.advancedDrawCards) {
@@ -37,12 +39,16 @@ async function appendInPlayCardsBackToDecks(
   if (g.activeCard) {
     const fromHeld = maestroHeld?.card && g.activeCard.id === maestroHeld.card.id;
     if (!fromHeld) {
-      const c = g.activeCard.color;
-      newDecks[c] = [...newDecks[c], g.activeCard];
+      if (keepColoredCardAsHeld && (g.activeCard.color === 'blue' || g.activeCard.color === 'red')) {
+        heldCardFromSkip = g.activeCard;
+      } else {
+        const c = g.activeCard.color;
+        newDecks[c] = [...newDecks[c], g.activeCard];
+      }
     }
   }
   await set(roomRef(roomCode, 'cardDecks'), sanitize(newDecks));
-  return { hadAdvancedDraw };
+  return { hadAdvancedDraw, heldCardFromSkip };
 }
 
 interface ConfirmScoreArgs {
@@ -215,6 +221,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       activeCard: card,
       publicCard: { color: card.color, bonusPoints: card.bonusPoints },
       turnPhase: 'singing',
+      hasDrawnCardThisTurn: true,
     });
     setLocalDecks(newDecks);
   }, [roomCode, isMaestro, localDecks, myUid]);
@@ -279,10 +286,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
     const myHeld = sc[myUid]?.heldCard;
     if (g.advancedDrawCards?.length || g.activeCard) {
       const safeDecks: CardDecks = decks || { yellow: [], blue: [], red: [] };
-      const { hadAdvancedDraw } = await appendInPlayCardsBackToDecks(roomCode, g, safeDecks, myHeld);
-      if (hadAdvancedDraw) {
-        await set(roomRef(roomCode, 'scores', myUid, 'hasUsedAdvancedDraw'), false);
-      }
+      await appendInPlayCardsBackToDecks(roomCode, g, safeDecks, myHeld);
     }
 
     await update(roomRef(roomCode, 'game'), sanitize({
@@ -521,6 +525,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       publicCard: null,
       revealedCard: null,
       turnsPlayedThisRound: roundComplete ? 0 : turnsPlayed,
+      hasDrawnCardThisTurn: false,
     });
     await set(roomRef(roomCode, 'judging'), null);
     for (const p of freshPlayers) {
@@ -555,9 +560,9 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
     if (hasDrawnToReturn && skipMaestroUid) {
       const mHeld = freshScores[skipMaestroUid]?.heldCard;
       const safeDecks: CardDecks = decks || { yellow: [], blue: [], red: [] };
-      const { hadAdvancedDraw } = await appendInPlayCardsBackToDecks(roomCode, freshGame, safeDecks, mHeld);
-      if (hadAdvancedDraw) {
-        await set(roomRef(roomCode, 'scores', skipMaestroUid, 'hasUsedAdvancedDraw'), false);
+      const { heldCardFromSkip } = await appendInPlayCardsBackToDecks(roomCode, freshGame, safeDecks, mHeld, true);
+      if (heldCardFromSkip) {
+        await set(roomRef(roomCode, 'scores', skipMaestroUid, 'heldCard'), sanitize({ card: heldCardFromSkip, roundsRemaining: 2, fulfilled: false }));
       }
     }
 
@@ -603,6 +608,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       publicCard: null,
       revealedCard: null,
       turnsPlayedThisRound: roundComplete ? 0 : turnsPlayed,
+      hasDrawnCardThisTurn: false,
     });
     await set(roomRef(roomCode, 'judging'), null);
   }, [roomCode]);

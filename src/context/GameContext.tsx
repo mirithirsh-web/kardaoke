@@ -22,6 +22,7 @@ type Action =
   | { type: 'STEAL_SCORE'; fulfilledCardIds: string[]; correctSingerIds: string[]; wordCount: number; songName?: string }
   | { type: 'NEXT_TURN' }
   | { type: 'SKIP_TURN' }
+  | { type: 'ABANDON_TURN' }
   | { type: 'RESUME_GAME' }
   | { type: 'RESET_GAME' };
 
@@ -83,6 +84,7 @@ function reducer(state: AppState, action: Action): AppState {
         advancedDrawCards: null,
         pendingStolenCards: null,
         turnsPlayedThisRound: 0,
+        hasDrawnCardThisTurn: false,
       };
       return { screen: 'play', game };
     }
@@ -111,6 +113,7 @@ function reducer(state: AppState, action: Action): AppState {
           activeCard: action.card,
           cardDecks: { ...state.game.cardDecks, [action.deckColor]: deck },
           turnPhase: 'singing',
+          hasDrawnCardThisTurn: true,
         },
       };
     }
@@ -421,6 +424,41 @@ function reducer(state: AppState, action: Action): AppState {
           advancedDrawCards: null,
           pendingStolenCards: null,
           turnsPlayedThisRound: roundComplete ? 0 : turnsPlayed,
+          hasDrawnCardThisTurn: false,
+        },
+      };
+    }
+
+    case 'ABANDON_TURN': {
+      if (!state.game) return state;
+      const g = state.game;
+      const maestro = g.players[g.currentMaestroIndex];
+      const newDecks = { ...g.cardDecks };
+
+      if (g.advancedDrawCards?.length) {
+        for (const card of g.advancedDrawCards) {
+          newDecks[card.color] = [...newDecks[card.color], card];
+        }
+      }
+      if (g.activeCard) {
+        const fromHeld = maestro.heldCard?.card && g.activeCard.id === maestro.heldCard.card.id;
+        if (!fromHeld) {
+          newDecks[g.activeCard.color] = [...newDecks[g.activeCard.color], g.activeCard];
+        }
+      }
+
+      const abandonPlayers = g.players;
+
+      return {
+        ...state,
+        game: {
+          ...g,
+          players: abandonPlayers,
+          turnPhase: 'choose-action',
+          activeCard: null,
+          advancedDrawCards: null,
+          pendingStolenCards: null,
+          cardDecks: newDecks,
         },
       };
     }
@@ -428,22 +466,46 @@ function reducer(state: AppState, action: Action): AppState {
     case 'SKIP_TURN': {
       if (!state.game) return state;
       const g = state.game;
+      const skipMaestro = g.players[g.currentMaestroIndex];
+      const skipDecks = { ...g.cardDecks };
+
+      if (g.advancedDrawCards?.length) {
+        for (const card of g.advancedDrawCards) {
+          skipDecks[card.color] = [...skipDecks[card.color], card];
+        }
+      }
+
+      // Blue/red drawn cards are held for next turn; yellow goes back to the deck
+      let skipNewHeldCard: import('../types').HeldCard | null = null;
+      if (g.activeCard) {
+        const fromHeld = skipMaestro.heldCard?.card && g.activeCard.id === skipMaestro.heldCard.card.id;
+        if (!fromHeld) {
+          if (g.activeCard.color === 'blue' || g.activeCard.color === 'red') {
+            skipNewHeldCard = { card: g.activeCard, roundsRemaining: 2, fulfilled: false };
+          } else {
+            skipDecks[g.activeCard.color] = [...skipDecks[g.activeCard.color], g.activeCard];
+          }
+        }
+      }
+
       const turnsPlayed = g.turnsPlayedThisRound + 1;
       const roundComplete = turnsPlayed >= g.players.length;
       const newRound = roundComplete ? g.currentRound + 1 : g.currentRound;
       const gameOver = newRound > g.totalRounds;
 
-      // Handle held card expiry on round change
-      const skipPlayers = g.players.map((p) => {
-        if (!p.heldCard) return p;
+      // Handle held card expiry on round change, and assign new held card for maestro
+      const skipPlayers = g.players.map((p, i) => {
+        const isMaestro = i === g.currentMaestroIndex;
+        const baseHeld = isMaestro && skipNewHeldCard ? skipNewHeldCard : p.heldCard;
+        if (!baseHeld) return isMaestro && skipNewHeldCard ? { ...p, heldCard: skipNewHeldCard } : p;
         if (roundComplete) {
-          const remaining = p.heldCard.roundsRemaining - 1;
+          const remaining = baseHeld.roundsRemaining - 1;
           if (remaining <= 0) {
             return { ...p, heldCard: null };
           }
-          return { ...p, heldCard: { ...p.heldCard, roundsRemaining: remaining } };
+          return { ...p, heldCard: { ...baseHeld, roundsRemaining: remaining } };
         }
-        return p;
+        return { ...p, heldCard: baseHeld };
       });
 
       if (gameOver) {
@@ -454,7 +516,7 @@ function reducer(state: AppState, action: Action): AppState {
         return {
           ...state,
           screen: 'endgame',
-          game: { ...g, players: finalPlayers, turnsPlayedThisRound: turnsPlayed },
+          game: { ...g, players: finalPlayers, cardDecks: skipDecks, turnsPlayedThisRound: turnsPlayed },
         };
       }
 
@@ -470,7 +532,9 @@ function reducer(state: AppState, action: Action): AppState {
           activeCard: null,
           advancedDrawCards: null,
           pendingStolenCards: null,
+          cardDecks: skipDecks,
           turnsPlayedThisRound: roundComplete ? 0 : turnsPlayed,
+          hasDrawnCardThisTurn: false,
         },
       };
     }

@@ -73,6 +73,7 @@ export interface GameState {
   advancedDrawCards: InspirationCard[] | null;
   pendingStolenCards: StolenCardSelection[] | null;
   turnsPlayedThisRound: number;
+  hasDrawnCardThisTurn: boolean;
 }
 
 export type Screen =
@@ -113,6 +114,7 @@ export interface MultiplayerGameState {
   revealedCard: InspirationCard | null;
   advancedDrawCards: InspirationCard[] | null;
   pendingStolenCards: StolenCardSelection[] | null;
+  hasDrawnCardThisTurn?: boolean;
 }
 
 export interface MultiplayerScores {
