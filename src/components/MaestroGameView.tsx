@@ -2,9 +2,11 @@ import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMultiplayerGame } from '../context/MultiplayerGameContext';
 import { useSound } from '../hooks/useSound';
+import { useTurnTimer } from '../hooks/useTurnTimer';
 import type { CardColor, StolenCardSelection } from '../types';
 import { getMaestroWordBonus } from '../utils/scoring';
 import MaestroAnnouncement from './MaestroAnnouncement';
+import TurnTimer from './TurnTimer';
 import cardBackBlue from '../assets/card-back-blue.png';
 import cardBackYellow from '../assets/card-back-yellow.png';
 import cardBackRed from '../assets/card-back-red.png';
@@ -24,6 +26,8 @@ export default function MaestroGameView() {
   const lang = (['he', 'es', 'fr'].includes(i18n.language) ? i18n.language : 'en') as 'en' | 'he' | 'es' | 'fr';
   const game = gameState!;
   const myScores = myUid ? scores[myUid] : null;
+  const secondsLeft = useTurnTimer(game.turnDeadline, true, skipTurn);
+  const timerActive = game.turnDeadline && !['judging', 'summary'].includes(game.turnPhase);
 
   const [wordCount, setWordCount] = useState(3);
   const [songName, setSongName] = useState('');
@@ -149,6 +153,7 @@ export default function MaestroGameView() {
         <div className="text-sm text-white/60">
           {t('game.round')} {game.currentRound} {t('game.of')} {game.totalRounds}
         </div>
+        {timerActive && <TurnTimer secondsLeft={secondsLeft} />}
         <div className="text-sm text-purple-300 font-semibold">{t('mp.youAreMaestro')}</div>
       </div>
 

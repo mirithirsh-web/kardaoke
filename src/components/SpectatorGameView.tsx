@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMultiplayerGame } from '../context/MultiplayerGameContext';
+import { useTurnTimer } from '../hooks/useTurnTimer';
 import MaestroAnnouncement from './MaestroAnnouncement';
+import TurnTimer from './TurnTimer';
 import cardBackBlue from '../assets/card-back-blue.png';
 import cardBackYellow from '../assets/card-back-yellow.png';
 import cardBackRed from '../assets/card-back-red.png';
@@ -13,7 +15,7 @@ export default function SpectatorGameView() {
   const {
     gameState, scores, judging, players, myUid,
     maestroName, maestroUid,
-    reportGotItRight,
+    reportGotItRight, skipTurn,
   } = useMultiplayerGame();
 
   const lang = (['he', 'es', 'fr'].includes(i18n.language) ? i18n.language : 'en') as 'en' | 'he' | 'es' | 'fr';
@@ -23,6 +25,8 @@ export default function SpectatorGameView() {
 
   const game = gameState!;
   const lastTurnScore = (game.scoreHistory || [])[(game.scoreHistory || []).length - 1];
+  const secondsLeft = useTurnTimer(game.turnDeadline, false, skipTurn);
+  const timerActive = game.turnDeadline && !['judging', 'summary'].includes(game.turnPhase);
 
   // Reset responded when turn changes
   useEffect(() => {
@@ -60,6 +64,7 @@ export default function SpectatorGameView() {
         <div className="text-sm text-white/60">
           {t('game.round')} {game.currentRound} {t('game.of')} {game.totalRounds}
         </div>
+        {timerActive && <TurnTimer secondsLeft={secondsLeft} />}
         <div className="text-sm text-white/60">
           {t('mp.you')}: {players.find(p => p.uid === myUid)?.name}
         </div>

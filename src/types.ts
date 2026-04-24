@@ -92,6 +92,7 @@ export interface RoomSettings {
   includeCards: boolean;
   allowStealing: boolean;
   selectedPacks: string[];
+  turnTimeLimit: number;
 }
 
 export interface PublicCardInfo {
@@ -115,6 +116,7 @@ export interface MultiplayerGameState {
   advancedDrawCards: InspirationCard[] | null;
   pendingStolenCards: StolenCardSelection[] | null;
   hasDrawnCardThisTurn?: boolean;
+  turnDeadline?: number | null;
 }
 
 export interface MultiplayerScores {

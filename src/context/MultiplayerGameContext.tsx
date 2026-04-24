@@ -161,6 +161,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       };
     }
 
+    const timeLimit = settings.turnTimeLimit || 0;
     const game: MultiplayerGameState = {
       currentMaestroIndex: 0,
       currentRound: 1,
@@ -176,6 +177,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       revealedCard: null,
       advancedDrawCards: null,
       pendingStolenCards: null,
+      turnDeadline: timeLimit > 0 ? Date.now() + timeLimit * 1000 : null,
     };
 
     await update(roomRef(roomCode), {
@@ -253,7 +255,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
   const startJudging = useCallback(async (wordCount: number) => {
     if (!roomCode || !isMaestro) return;
     await set(roomRef(roomCode, 'judging'), { wordCount, singerResponses: {} });
-    await set(roomRef(roomCode, 'game', 'turnPhase'), 'judging');
+    await update(roomRef(roomCode, 'game'), { turnPhase: 'judging', turnDeadline: null });
   }, [roomCode, isMaestro]);
 
   const reportGotItRight = useCallback(async (didGetIt: boolean) => {
@@ -515,6 +517,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
     }
 
     const nextMaestro = (freshGame.currentMaestroIndex + 1) % numPlayers;
+    const ntTimeLimit = settings?.turnTimeLimit || 0;
     await update(roomRef(roomCode, 'game'), {
       currentMaestroIndex: nextMaestro,
       currentRound: newRound,
@@ -526,12 +529,13 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       revealedCard: null,
       turnsPlayedThisRound: roundComplete ? 0 : turnsPlayed,
       hasDrawnCardThisTurn: false,
+      turnDeadline: ntTimeLimit > 0 ? Date.now() + ntTimeLimit * 1000 : null,
     });
     await set(roomRef(roomCode, 'judging'), null);
     for (const p of freshPlayers) {
       await set(roomRef(roomCode, 'privateCard', p.uid), null);
     }
-  }, [roomCode]);
+  }, [roomCode, settings]);
 
   const skipTurn = useCallback(async () => {
     if (!roomCode) return;
@@ -598,6 +602,7 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
     }
 
     const nextMaestro = (freshGame.currentMaestroIndex + 1) % numPlayers;
+    const stTimeLimit = settings?.turnTimeLimit || 0;
     await update(roomRef(roomCode, 'game'), {
       currentMaestroIndex: nextMaestro,
       currentRound: newRound,
@@ -609,9 +614,10 @@ export function MultiplayerGameProvider({ children }: { children: ReactNode }) {
       revealedCard: null,
       turnsPlayedThisRound: roundComplete ? 0 : turnsPlayed,
       hasDrawnCardThisTurn: false,
+      turnDeadline: stTimeLimit > 0 ? Date.now() + stTimeLimit * 1000 : null,
     });
     await set(roomRef(roomCode, 'judging'), null);
-  }, [roomCode]);
+  }, [roomCode, settings]);
 
   return (
     <MPGameContext.Provider value={{

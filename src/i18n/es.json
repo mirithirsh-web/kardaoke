@@ -29,6 +29,9 @@
     "allowStealingHint": "El Maestro puede robar cartas visibles de otros jugadores en lugar de sacar una",
     "themedPacks": "Themed Packs",
     "themedPacksHint": "Add extra themed cards to the yellow deck",
+    "turnTimer": "Turn Timer",
+    "turnTimerHint": "Auto-skip when time runs out",
+    "seconds": "{{count}}s",
     "startGame": "¡Empezar!",
     "minPlayers": "Agrega al menos 2 jugadores",
     "removePlayer": "Eliminar"
@@ -100,7 +103,8 @@
     "maestroFulfilledCard": "El Maestro cumplió esta carta",
     "abandonPlay": "Devolver cartas y cancelar este intento",
     "advancedNoneCorrectExplain": "Ningún cantante de respaldo acertó la siguiente línea, así que no puedes conservar cartas de robo avanzado. Cuando todos hayan respondido, pulsa Confirmar puntuación para devolver las tres cartas a los mazos.",
-    "stealNoneCorrectExplain": "Ningún cantante de respaldo acertó la siguiente línea, así que el robo no puede tener éxito. Cuando todos hayan respondido, pulsa Confirmar puntuación para continuar sin robar cartas."
+    "stealNoneCorrectExplain": "Ningún cantante de respaldo acertó la siguiente línea, así que el robo no puede tener éxito. Cuando todos hayan respondido, pulsa Confirmar puntuación para continuar sin robar cartas.",
+    "timeUp": "Time's up!"
   },
   "scoreboard": {
     "title": "Puntuación",

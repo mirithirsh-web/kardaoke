@@ -54,7 +54,7 @@ export default function MultiplayerLobby() {
     await updateSettings({ [key]: value });
   };
 
-  const s = settings || { rounds: 5, includeCards: true, allowStealing: false, selectedPacks: [] as string[] };
+  const s = settings || { rounds: 5, includeCards: true, allowStealing: false, selectedPacks: [] as string[], turnTimeLimit: 0 };
   const currentPacks: string[] = s.selectedPacks || [];
 
   const togglePack = async (packId: string) => {
@@ -192,6 +192,39 @@ export default function MultiplayerLobby() {
               )}
             </div>
           )}
+
+          {/* Turn Timer */}
+          <div className="glass rounded-2xl p-4 animate-slide-up">
+            <label className="flex items-center justify-between cursor-pointer">
+              <div>
+                <span className="font-semibold">⏳ {t('setup.turnTimer')}</span>
+                <p className="text-white/50 text-xs mt-1">{t('setup.turnTimerHint')}</p>
+              </div>
+              <div
+                className={`w-14 h-8 rounded-full relative transition-colors shrink-0 ms-4 ${s.turnTimeLimit > 0 ? 'bg-pink-500' : 'bg-white/20'}`}
+                onClick={() => updateSettings({ turnTimeLimit: s.turnTimeLimit > 0 ? 0 : 90 })}
+              >
+                <div className={`absolute top-1 w-6 h-6 rounded-full bg-white transition-all ${s.turnTimeLimit > 0 ? 'left-7' : 'left-1'}`} />
+              </div>
+            </label>
+            {s.turnTimeLimit > 0 && (
+              <div className="flex gap-2 mt-3 justify-center">
+                {[60, 90, 120].map(sec => (
+                  <button
+                    key={sec}
+                    onClick={() => updateSettings({ turnTimeLimit: sec })}
+                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                      s.turnTimeLimit === sec
+                        ? 'bg-pink-500/30 border border-pink-400/60 text-pink-200 shadow-lg shadow-pink-500/10'
+                        : 'bg-white/10 border border-white/10 text-white/70 hover:bg-white/15'
+                    }`}
+                  >
+                    {t('setup.seconds', { count: sec })}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Start */}
           <button

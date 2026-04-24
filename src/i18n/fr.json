@@ -29,6 +29,9 @@
     "allowStealingHint": "Le Maestro peut voler des cartes face visible aux autres joueurs au lieu de piocher",
     "themedPacks": "Themed Packs",
     "themedPacksHint": "Add extra themed cards to the yellow deck",
+    "turnTimer": "Turn Timer",
+    "turnTimerHint": "Auto-skip when time runs out",
+    "seconds": "{{count}}s",
     "startGame": "Lancer la partie !",
     "minPlayers": "Ajoutez au moins 2 joueurs",
     "removePlayer": "Retirer"
@@ -100,7 +103,8 @@
     "maestroFulfilledCard": "Le Maestro a rempli cette carte",
     "abandonPlay": "Rendre les cartes et annuler cette tentative",
     "advancedNoneCorrectExplain": "Aucun choriste n'a chanté correctement la suite : vous ne pouvez garder aucune carte de pioche avancée. Quand tout le monde a répondu, appuyez sur Confirmer le score pour rendre les trois cartes aux paquets.",
-    "stealNoneCorrectExplain": "Aucun choriste n'a chanté correctement la suite : le vol ne peut pas réussir. Quand tout le monde a répondu, appuyez sur Confirmer le score pour continuer sans prendre de cartes volées."
+    "stealNoneCorrectExplain": "Aucun choriste n'a chanté correctement la suite : le vol ne peut pas réussir. Quand tout le monde a répondu, appuyez sur Confirmer le score pour continuer sans prendre de cartes volées.",
+    "timeUp": "Time's up!"
   },
   "scoreboard": {
     "title": "Tableau des scores",

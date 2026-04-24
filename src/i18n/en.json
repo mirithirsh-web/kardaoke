@@ -29,6 +29,9 @@
     "allowStealingHint": "Maestro can steal face-up cards from other players instead of drawing",
     "themedPacks": "Themed Decks",
     "themedPacksHint": "Add extra themed cards to the yellow deck",
+    "turnTimer": "Turn Timer",
+    "turnTimerHint": "Auto-skip when time runs out",
+    "seconds": "{{count}}s",
     "startGame": "Start Game!",
     "minPlayers": "Add at least 2 players",
     "removePlayer": "Remove"
@@ -100,7 +103,8 @@
     "maestroFulfilledCard": "The Maestro fulfilled this card",
     "abandonPlay": "Return cards & cancel this attempt",
     "advancedNoneCorrectExplain": "No backup singer got the next line right, so you cannot keep any advanced-draw cards. Once everyone has responded, tap Confirm & score to return all three cards to the decks.",
-    "stealNoneCorrectExplain": "No backup singer got the next line right, so the steal cannot succeed. Once everyone has responded, tap Confirm & score to continue without taking any stolen cards."
+    "stealNoneCorrectExplain": "No backup singer got the next line right, so the steal cannot succeed. Once everyone has responded, tap Confirm & score to continue without taking any stolen cards.",
+    "timeUp": "Time's up!"
   },
   "scoreboard": {
     "title": "Scoreboard",
